@@ -46,23 +46,107 @@ button:disabled{
   opacity:.5;
   cursor:not-allowed;
 }
+
+/* DONATION HEADER */
+
+.donation-header{
+position:sticky;
+top:0;
+z-index:50;
+backdrop-filter:blur(12px);
+background:rgba(247,254,249,0.75);
+border-bottom:1px solid rgba(224,231,235,0.5);
+}
+
+.donation-nav{
+max-width:900px;
+margin:auto;
+padding:14px 20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.back-btn{
+display:flex;
+align-items:center;
+gap:6px;
+text-decoration:none;
+color:var(--primary);
+font-weight:500;
+transition:.3s;
+}
+
+.back-btn:hover{
+opacity:.7;
+}
+
+.back-btn svg{
+width:20px;
+height:20px;
+stroke:currentColor;
+stroke-width:2;
+fill:none;
+}
+
+.donation-title{
+font-size:20px;
+font-weight:700;
+color:var(--primary);
+text-align:center;
+flex:1;
+}
+
+.nav-space{
+width:80px;
+}
+
+/* MOBILE */
+
+@media (max-width:640px){
+
+.donation-nav{
+padding:12px 16px;
+}
+
+.donation-title{
+font-size:16px;
+}
+
+.back-btn span{
+display:none;
+}
+
+.back-btn svg{
+width:22px;
+height:22px;
+}
+
+.nav-space{
+width:40px;
+}
+
+}
 </style>
 </head>
 <body>
   <main style="min-height: 100vh; background: linear-gradient(to bottom right, var(--background), rgb(219, 234, 254), rgba(236, 248, 255, 0.5));">
-    <!-- Header with back button -->
-    <div style="position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); border-color: rgba(224, 231, 235, 0.4); backdrop-filter: blur(12px); background-color: rgba(247, 254, 249, 0.7);">
-      <div style="max-width: 56rem; margin: 0 auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
-        <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary); transition: color 0.3s ease; text-decoration: none;" onmouseover="this.style.color='var(--primary)'; this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-          <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    <header class="donation-header">
+      <div class="donation-nav">
+
+        <a href="index.html" class="back-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7"></path>
           </svg>
-          <span style="font-weight: 500;">Kembali</span>
+          <span>Kembali</span>
         </a>
-        <h1 style="font-size: 1.5rem; font-weight: 700; text-align: center; flex: 1; color: var(--primary);">Yayasan Samudra Berkah</h1>
-        <div style="width: 80px;"></div>
+
+        <h1 class="donation-title">Yayasan Samudra Berkah</h1>
+
+        <div class="nav-space"></div>
+
       </div>
-    </div>
+    </header>
 
     <div style="max-width: 42rem; margin: 0 auto; padding: 3rem 1rem;">
 <!-- Progress indicator -->
