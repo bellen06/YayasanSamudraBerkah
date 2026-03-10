@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Halaman donasi Yayasan Samudra Berkah">
+  <meta name="theme-color" content="#5284b2">
+  <title>Donasi - Yayasan Samudra Berkah</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+:root{
+  --primary:#5284b2;
+  --accent:#80c8dc;
+  --secondary:#3b82f6;
+  --background:#f7fef9;
+  --foreground:#1f3a3a;
+  --border:#e0e7eb;
+  --muted:#dbeafe;
+  --input:#ffffff;
+}
+
+/* reset */
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+/* animation */
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+/* button active */
+.amount-btn.active{
+  background:rgba(82,132,178,0.1) !important;
+  border-color:var(--primary) !important;
+  box-shadow:0 0 0 2px rgba(82,132,178,0.4);
+}
+
+/* disabled button */
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+</style>
+</head>
+<body>
+  <main style="min-height: 100vh; background: linear-gradient(to bottom right, var(--background), rgb(219, 234, 254), rgba(236, 248, 255, 0.5));">
+    <!-- Header with back button -->
+    <div style="position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--border); border-color: rgba(224, 231, 235, 0.4); backdrop-filter: blur(12px); background-color: rgba(247, 254, 249, 0.7);">
+      <div style="max-width: 56rem; margin: 0 auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; color: var(--primary); transition: color 0.3s ease; text-decoration: none;" onmouseover="this.style.color='var(--primary)'; this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+          <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          <span style="font-weight: 500;">Kembali</span>
+        </a>
+        <h1 style="font-size: 1.5rem; font-weight: 700; text-align: center; flex: 1; color: var(--primary);">Yayasan Samudra Berkah</h1>
+        <div style="width: 80px;"></div>
+      </div>
+    </div>
+
+    <div style="max-width: 42rem; margin: 0 auto; padding: 3rem 1rem;">
+      <!-- Progress indicator -->
+      <div style="margin-bottom: 3rem; display:flex; justify-content:center;">
+        
+        <div style="display:flex; align-items:center; max-width:600px; width:100%;">
+
+          <div id="step1" style="display:flex; flex-direction:column; align-items:center; opacity:1;">
+            <div style="width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; background:var(--primary);">
+              1
+            </div>
+            <p style="font-size:0.875rem; margin-top:0.5rem; color:rgba(31,58,58,0.7);">
+              Pilih Jumlah
+            </p>
+          </div>
+
+          <div id="progress1" style="height:4px; flex:1; margin:0 1rem; background:var(--muted); border-radius:9999px;"></div>
+
+          <div id="step2" style="display:flex; flex-direction:column; align-items:center; opacity:0.5;">
+            <div style="width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; background:var(--muted);">
+              2
+            </div>
+            <p style="font-size:0.875rem; margin-top:0.5rem; color:rgba(31,58,58,0.7);">
+              Data Diri
+            </p>
+          </div>
+
+          <div id="progress2" style="height:4px; flex:1; margin:0 1rem; background:var(--muted); border-radius:9999px;"></div>
+
+          <div id="step3" style="display:flex; flex-direction:column; align-items:center; opacity:0.5;">
+            <div style="width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; background:var(--muted);">
+              3
+            </div>
+            <p style="font-size:0.875rem; margin-top:0.5rem; color:rgba(31,58,58,0.7);">
+              Konfirmasi
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Step 1: Amount Selection -->
+      <div id="amountStep" style="display: grid; grid-template-columns: 1fr; gap: 2rem;" class="fade-in">
+        <div style="text-align: center;">
+          <h2 style="font-size: 1.875rem; font-weight: 700; color: var(--foreground); margin-bottom: 0.5rem;">Berapa yang Ingin Anda Donasikan?</h2>
+          <p style="color: rgba(31, 58, 58, 0.7);">Setiap donasi Anda membuat perbedaan nyata dalam kehidupan mereka yang membutuhkan</p>
+        </div>
+
+        <!-- Preset amounts -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;" id="presetAmounts">
+          <button class="amount-btn" data-amount="25000" onclick="selectAmount(25000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">25K</div>
+          </button>
+          <button class="amount-btn" data-amount="50000" onclick="selectAmount(50000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">50K</div>
+          </button>
+          <button class="amount-btn" data-amount="100000" onclick="selectAmount(100000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">100K</div>
+          </button>
+          <button class="amount-btn" data-amount="250000" onclick="selectAmount(250000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">250K</div>
+          </button>
+          <button class="amount-btn" data-amount="500000" onclick="selectAmount(500000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">500K</div>
+          </button>
+          <button class="amount-btn" data-amount="1000000" onclick="selectAmount(1000000)" style="padding: 1rem; border-radius: 0.5rem; border: 2px solid var(--border); background: transparent; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.1)'" onmouseout="if (!this.classList.contains('active')) { this.style.borderColor='var(--border)'; this.style.boxShadow='none'; }">
+            <div style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7);">Rp</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: var(--primary);">1M</div>
+          </button>
+        </div>
+
+        <!-- Custom amount -->
+        <div style="display: grid; gap: 0.75rem;">
+          <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--foreground);">Atau masukkan jumlah lain</label>
+          <div style="position: relative;">
+            <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgba(31, 58, 58, 0.5); font-weight: 500;">Rp</span>
+            <input type="number" id="customAmount" placeholder="Contoh: 150000" style="width: 100%; padding-left: 2.5rem; padding-top: 0.75rem; padding-bottom: 0.75rem; padding-right: 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1.125rem; color: var(--foreground); background: var(--input); transition: border-color 0.3s ease;" onchange="selectCustomAmount()" oninput="selectCustomAmount()" onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 2px rgba(82, 132, 178, 0.5)'" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'">
+          </div>
+        </div>
+
+        <!-- Summary card -->
+        <div class="card-glass p-6" style="border: 1px solid rgba(82, 132, 178, 0.2); background: linear-gradient(135deg, rgba(82, 132, 178, 0.05), rgba(128, 200, 220, 0.05)); border-radius: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <p style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7); margin-bottom: 0.25rem;">Total Donasi</p>
+              <p id="totalAmount" style="font-size: 1.875rem; font-weight: 700; color: var(--primary);">Rp 50.000</p>
+            </div>
+            <div style="font-size: 3rem; color: rgba(82, 132, 178, 0.3);">❤️</div>
+          </div>
+        </div>
+
+        <button onclick="proceedToInfo()" id="proceedBtn" style="width: 100%; height: 48px; font-size: 1rem; font-weight: 600; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 15px 30px rgba(82, 132, 178, 0.3)'" onmouseout="this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.2)'">
+          Lanjutkan ke Data Diri
+        </button>
+      </div>
+
+      <!-- Step 2: Donor Information -->
+      <div id="infoStep" style="display: none; grid-template-columns: 1fr; gap: 2rem;" class="fade-in">
+        <div style="text-align: center;">
+          <h2 style="font-size: 1.875rem; font-weight: 700; color: var(--foreground); margin-bottom: 0.5rem;">Data Diri Anda</h2>
+          <p style="color: rgba(31, 58, 58, 0.7);">Informasi ini membantu kami menghubungi dan memberikan tanda terima kasih</p>
+        </div>
+
+        <form id="donorForm" style="display: grid; gap: 1.25rem;" onsubmit="submitDonation(event)">
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--foreground); margin-bottom: 0.5rem;">Nama Lengkap *</label>
+            <input type="text" id="donorName" required placeholder="Nama Anda" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; color: var(--foreground); background: var(--input); transition: border-color 0.3s ease;" onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 2px rgba(82, 132, 178, 0.5)'" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--foreground); margin-bottom: 0.5rem;">Email *</label>
+            <input type="email" id="donorEmail" required placeholder="email@example.com" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; color: var(--foreground); background: var(--input); transition: border-color 0.3s ease;" onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 2px rgba(82, 132, 178, 0.5)'" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--foreground); margin-bottom: 0.5rem;">Nomor Telepon</label>
+            <input type="tel" id="donorPhone" placeholder="62812345678" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; color: var(--foreground); background: var(--input); transition: border-color 0.3s ease;" onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 2px rgba(82, 132, 178, 0.5)'" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--foreground); margin-bottom: 0.5rem;">Pesan (Opsional)</label>
+            <textarea id="donorMessage" placeholder="Berikan pesan dukungan Anda..." style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; font-size: 1rem; color: var(--foreground); background: var(--input); transition: border-color 0.3s ease; font-family: inherit; resize: vertical;" rows="4" onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 2px rgba(82, 132, 178, 0.5)'" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'"></textarea>
+          </div>
+
+          <!-- Summary before submission -->
+          <div class="card-glass p-4" style="border: 1px solid rgba(82, 132, 178, 0.2); background: linear-gradient(135deg, rgba(82, 132, 178, 0.05), rgba(128, 200, 220, 0.05)); border-radius: 1.5rem;">
+            <div style="display: grid; gap: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                <span style="color: rgba(31, 58, 58, 0.7);">Jumlah Donasi:</span>
+                <span id="summaryAmount" style="font-weight: 700; color: var(--primary);">Rp 50.000</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                <span style="color: rgba(31, 58, 58, 0.7);">Nama:</span>
+                <span id="summaryName" style="font-weight: 600; color: var(--foreground);">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
+                <span style="color: rgba(31, 58, 58, 0.7);">Email:</span>
+                <span id="summaryEmail" style="font-weight: 600; color: var(--foreground); text-align: right;">-</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+            <button type="button" onclick="goBackToAmount()" style="padding: 0.75rem 1rem; border: 2px solid var(--primary); color: var(--primary); background: transparent; border-radius: 9999px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='var(--primary)'; this.style.color='white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary)'">
+              Kembali
+            </button>
+            <button type="submit" style="padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 9999px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 15px 30px rgba(82, 132, 178, 0.3)'" onmouseout="this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.2)'">
+              Konfirmasi Donasi
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Success -->
+      <div id="successStep" style="display: none; grid-template-columns: 1fr; gap: 2rem; text-align: center;" class="fade-in">
+        <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+          <div style="position: relative;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #4ade80, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: bounce 1s infinite;">
+              <svg style="width: 48px; height: 48px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 style="font-size: 1.875rem; font-weight: 700; color: var(--foreground); margin-bottom: 0.75rem;">Terima Kasih!</h2>
+          <p style="font-size: 1.125rem; color: rgba(31, 58, 58, 0.7); margin-bottom: 1rem;">
+            Donasi Anda sebesar <span id="successAmount" style="font-weight: 700; color: var(--primary);">Rp 50.000</span>
+          </p>
+          <p style="color: rgba(31, 58, 58, 0.6);">
+            telah diterima dengan baik. Kami sangat menghargai kontribusi Anda untuk membantu sesama.
+          </p>
+        </div>
+
+        <div class="card-glass p-6" style="border: 1px solid rgba(82, 132, 178, 0.2); background: linear-gradient(135deg, rgba(82, 132, 178, 0.05), rgba(128, 200, 220, 0.05)); border-radius: 1.5rem; text-align: left;">
+          <div style="display: grid; gap: 0.75rem;">
+            <div>
+              <p style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7); margin-bottom: 0.25rem;">Penerima Donasi</p>
+              <p id="successName" style="font-weight: 600; color: var(--foreground);">-</p>
+            </div>
+            <div>
+              <p style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7); margin-bottom: 0.25rem;">Tanda Terima akan Dikirim ke</p>
+              <p id="successEmail" style="font-weight: 600; color: var(--foreground);">-</p>
+            </div>
+            <div id="successMessageBox" style="display: none;">
+              <p style="font-size: 0.875rem; color: rgba(31, 58, 58, 0.7); margin-bottom: 0.25rem;">Pesan Anda</p>
+              <p id="successMessage" style="color: var(--foreground); font-style: italic;">-</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: rgb(219, 234, 254); border: 1px solid rgb(191, 219, 254); border-radius: 0.5rem; padding: 1rem; text-align: left;">
+          <p style="font-size: 0.875rem; color: rgb(30, 58, 82);">
+            <span style="font-weight: 600;">Informasi Penting:</span> Proses verifikasi donasi Anda akan selesai dalam 24 jam. Anda akan menerima email konfirmasi dengan nomor referensi dan riwayat penggunaan dana.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+          <a href="index.html" style="padding: 0.75rem 1.5rem; border: 2px solid var(--primary); color: var(--primary); background: transparent; border-radius: 9999px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; text-align: center; display: inline-block;" onmouseover="this.style.backgroundColor='var(--primary)'; this.style.color='white'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary)'">
+            Kembali ke Beranda
+          </a>
+          <button style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 9999px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 15px 30px rgba(82, 132, 178, 0.3)'" onmouseout="this.style.boxShadow='0 10px 20px rgba(82, 132, 178, 0.2)'">
+            Bagikan Donasi Anda
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentStep = 'amount';
+    let selectedAmount = 50000;
+
+    function selectAmount(amount) {
+      selectedAmount = amount;
+      document.getElementById('customAmount').value = '';
+      updateAmountDisplay();
+      updateActiveButton();
+    }
+
+    function selectCustomAmount(){
+      const val = document.getElementById('customAmount').value;
+
+      if(val && parseInt(val) > 0){
+        selectedAmount = parseInt(val);
+        updateAmountDisplay();
+        updateActiveButton();
+      }
+    }
+
+    function updateAmountDisplay() {
+      document.getElementById('totalAmount').textContent = `Rp ${selectedAmount.toLocaleString('id-ID')}`;
+      document.getElementById('summaryAmount').textContent = `Rp ${selectedAmount.toLocaleString('id-ID')}`;
+      document.getElementById('proceedBtn').disabled = selectedAmount <= 0;
+    }
+
+    function updateActiveButton() {
+      document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.backgroundColor = 'transparent';
+        btn.style.borderColor = 'var(--border)';
+        if (parseInt(btn.dataset.amount) === selectedAmount) {
+          btn.classList.add('active');
+          btn.style.backgroundColor = 'rgba(82, 132, 178, 0.1)';
+          btn.style.borderColor = 'var(--primary)';
+          btn.style.boxShadow = '0 0 0 2px rgba(82, 132, 178, 0.5)';
+        }
+      });
+    }
+
+    function proceedToInfo(){
+
+      if(!selectedAmount || selectedAmount <= 0){
+        alert("Masukkan jumlah donasi terlebih dahulu");
+        return;
+      }
+
+      document.getElementById('amountStep').style.display='none';
+      document.getElementById('infoStep').style.display='grid';
+
+      document.getElementById('step2').style.opacity='1';
+      document.getElementById('progress1').style.backgroundColor='var(--primary)';
+
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function goBackToAmount() {
+      // Update progress
+      document.getElementById('step2').style.opacity = '0.5';
+      document.getElementById('step3').style.opacity = '0.5';
+      document.getElementById('progress1').style.backgroundColor = 'var(--muted)';
+      document.getElementById('progress2').style.backgroundColor = 'var(--muted)';
+      
+      // Switch steps
+      document.getElementById('amountStep').style.display = 'grid';
+      document.getElementById('infoStep').style.display = 'none';
+      currentStep = 'amount';
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    function submitDonation(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('donorName').value;
+      const email = document.getElementById('donorEmail').value;
+      const phone = document.getElementById('donorPhone').value;
+      const message = document.getElementById('donorMessage').value;
+      
+      if (name && email) {
+        // Update progress
+        document.getElementById('step2').style.opacity = '1';
+        document.getElementById('step3').style.opacity = '1';
+        document.getElementById('progress2').style.backgroundColor = 'var(--primary)';
+        
+        // Update success screen
+        document.getElementById('successAmount').textContent = `Rp ${selectedAmount.toLocaleString('id-ID')}`;
+        document.getElementById('successName').textContent = name;
+        document.getElementById('successEmail').textContent = email;
+        
+        if (message) {
+          document.getElementById('successMessageBox').style.display = 'block';
+          document.getElementById('successMessage').textContent = `"${message}"`;
+        }
+        
+        // Switch steps
+        document.getElementById('infoStep').style.display = 'none';
+        document.getElementById('successStep').style.display = 'grid';
+        currentStep = 'success';
+
+        setTimeout(resetForm,10000);
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function resetForm() {
+      // Reset form fields
+      document.getElementById('donorForm').reset();
+      document.getElementById('donorName').value = '';
+      document.getElementById('donorEmail').value = '';
+      document.getElementById('donorPhone').value = '';
+      document.getElementById('donorMessage').value = '';
+      
+      // Reset amount
+      selectedAmount = 50000;
+      
+      // Reset progress
+      document.getElementById('step1').style.opacity = '1';
+      document.getElementById('step2').style.opacity = '0.5';
+      document.getElementById('step3').style.opacity = '0.5';
+      document.getElementById('progress1').style.backgroundColor = 'var(--muted)';
+      document.getElementById('progress2').style.backgroundColor = 'var(--muted)';
+      
+      // Switch to amount step
+      document.getElementById('amountStep').style.display = 'grid';
+      document.getElementById('infoStep').style.display = 'none';
+      document.getElementById('successStep').style.display = 'none';
+      currentStep = 'amount';
+      
+      updateAmountDisplay();
+      updateActiveButton();
+    }
+
+    // Initialize
+    updateAmountDisplay();
+    updateActiveButton();
+
+    // Form input updates
+    document.getElementById('donorName').addEventListener('input', function() {
+      document.getElementById('summaryName').textContent = this.value || '-';
+    });
+
+    document.getElementById('donorEmail').addEventListener('input', function() {
+      document.getElementById('summaryEmail').textContent = this.value || '-';
+    });
+  </script>
+</body>
+</html>
